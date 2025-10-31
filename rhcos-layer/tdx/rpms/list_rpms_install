@@ -1,2 +1,4 @@
-kata-containers-3.19.1-1.rhaos4.20.el9.x86_64.rpm
-qemu-kvm-9.1.0-25.el9s.tdx
+kata-containers-3.21.0-2.rhaos4.21.el9.x86_64.rpm
+kata-containers-initrds-3.21.0-2.rhaos4.21.el9.x86_64.rpm
+kata-containers-cri-handlers-3.21.0-2.rhaos4.21.el9.x86_64.rpm
+qemu-kvm-9.1.0-29.el9_7.x86_64.rpm

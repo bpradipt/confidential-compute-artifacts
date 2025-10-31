@@ -1,10 +1,7 @@
 # Use 4.20 as the base
-# 4.20.0-rc2 release image: quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:526ac23c49751f306916333ea1e8c8474a99351f2eebfe23a9115dfa4f7e0808
+# 4.20.0 release image: quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:f9d1f649ed9bc155cd6b43aa43a606846b996b6577a7bcc3d872a91e415abc98
 
-ARG PAYLOAD_IMAGE=quay.io/cclaudio/kata-initrds:1.1
-ARG OCP_RELEASE_IMAGE=quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:526ac23c49751f306916333ea1e8c8474a99351f2eebfe23a9115dfa4f7e0808
-
-FROM ${PAYLOAD_IMAGE} as payload
+ARG OCP_RELEASE_IMAGE=quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:f9d1f649ed9bc155cd6b43aa43a606846b996b6577a7bcc3d872a91e415abc98
 
 FROM ${OCP_RELEASE_IMAGE}
 
@@ -17,8 +14,9 @@ RUN --mount=type=secret,id=org,dst=/run/secrets/org \
 
 WORKDIR /
 
-# Install Kernel, Qemu and Kata-containers
+# Install Kernel, Qemu, Kata-containers and pre-built initrds
 COPY tdx/centos-tdx.repo /etc/yum.repos.d
+COPY tdx/rhel-9_7.repo /etc/yum.repos.d
 COPY tdx/rpms/ /
 
 RUN \
@@ -34,18 +32,6 @@ RUN \
   else \
     echo "--- Skipping RPM installation: /list_rpms_install is empty or not found ---"; \
   fi
-
-# Copy the required tarballs from the payload stage into a temporary directory
-# in the final image stage.
-# It is assumed that these files exist in the root ('/') directory of the payload image.
-COPY --from=payload /kata-configs.tar.gz /tmp/
-COPY --from=payload /kata-initrds.tar.gz /tmp/
-
-# Extract the files
-RUN tar -xzvf /tmp/kata-configs.tar.gz -C / && \
-    tar -xzvf /tmp/kata-initrds.tar.gz -C / && \
-    rm /tmp/kata-configs.tar.gz /tmp/kata-initrds.tar.gz
-
 
 # Selinux adjustments to provide access to sev
 RUN setsebool -P container_use_devices 1

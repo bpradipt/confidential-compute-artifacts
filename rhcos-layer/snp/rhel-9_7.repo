@@ -1,0 +1,11 @@
+[RHEL-9.7.0-BaseOS-rpms]
+name = RHEL-9.7.0-BaseOS-rpms
+baseurl = http://download.devel.redhat.com/rhel-9/composes/RHEL-9/RHEL-9.7.0-20251021.0/compose/BaseOS/$basearch/os
+enabled = 1
+gpgcheck = 0
+
+[RHEL-9.7.0-AppStream-rpms]
+name = RHEL-9.7.0-AppStream-rpms
+baseurl = http://download.devel.redhat.com/rhel-9/composes/RHEL-9/RHEL-9.7.0-20251021.0/compose/AppStream/$basearch/os
+enabled = 1
+gpgcheck = 0
