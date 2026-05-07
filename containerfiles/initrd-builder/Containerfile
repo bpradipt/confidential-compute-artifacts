@@ -47,7 +47,9 @@ RUN      set +x \
         nvidia-driver-cuda-${NVIDIA_DRIVERS_VERSION} \
         nvidia-driver-libs-${NVIDIA_DRIVERS_VERSION} \
         nvidia-persistenced-${NVIDIA_DRIVERS_VERSION} \
-        kmod-nvidia \
+        nvidia-fabricmanager-${NVIDIA_DRIVERS_VERSION} \
+        libnvidia-nscq-${NVIDIA_DRIVERS_VERSION} \
+        kmod-nvidia-open-${NVIDIA_DRIVERS_VERSION}-$(echo ${KERNEL_UNAME} | sed 's/\.el10[^.]*\.[^.]*$//') \
         nvidia-container-toolkit \
         zstd jq policycoreutils dbus-daemon rsync chrony rsyslog \
         iptables libtirpc git make gcc \

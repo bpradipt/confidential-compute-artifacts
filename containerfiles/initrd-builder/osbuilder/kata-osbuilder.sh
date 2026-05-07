@@ -395,6 +395,17 @@ make_kata_adjustments_to_dracut_rootfs()
             mkdir -p ${DRACUT_ROOTFS}/etc/modprobe.d/
             echo "blacklist nouveau" > ${DRACUT_ROOTFS}/etc/modprobe.d/blacklist_nouveau.conf
 
+            # fabricmanager: dracut only creates the empty nvswitch directory skeleton;
+            # copy the config files explicitly (matches chisseled_nvswitch() behavior)
+            if [ -d /usr/share/nvidia/nvswitch ]; then
+                mkdir -p ${DRACUT_ROOTFS}/usr/share/nvidia/nvswitch
+                rsync -a /usr/share/nvidia/nvswitch/ ${DRACUT_ROOTFS}/usr/share/nvidia/nvswitch/
+                local fm_cfg="${DRACUT_ROOTFS}/usr/share/nvidia/nvswitch/fabricmanager.cfg"
+                [ -f "${fm_cfg}" ] && sed -i 's|^LOG_USE_SYSLOG=.*|LOG_USE_SYSLOG=1|' "${fm_cfg}"
+            fi
+            # fabricmanager: resolve dynamic library dependencies
+            ldd /usr/bin/nv-fabricmanager | perl -lne 'print $1 if /=>\s+\/lib64\/(\S+)/o' | xargs -i rsync -aL /lib64/{} ${DRACUT_ROOTFS}/lib64/
+
             install_trusted_ca_bundle_to_rootfs
             ;;
 
